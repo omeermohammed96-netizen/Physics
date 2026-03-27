@@ -1,212 +1,168 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحدي الفيزياء الاحترافي ✨</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Physics Master ✨</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-        body { font-family: 'Cairo', sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: #1e293b; padding: 25px; border-radius: 20px; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid #334155; }
-        .stage-label { color: #38bdf8; font-weight: bold; margin-bottom: 10px; }
-        .question-text { font-size: 1.3rem; min-height: 90px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; }
-        .option-btn { background: linear-gradient(135deg, #059669, #10b981); color: white; border: none; padding: 14px; margin: 8px 0; width: 100%; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .option-btn:active { transform: scale(0.96); }
-        .glow { box-shadow: 0 0 15px #10b981; border: 2px solid white; }
-        .shake { animation: shake 0.4s; }
-        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-6px);} 75% {transform: translateX(6px);} }
-        .stats { display: flex; justify-content: space-between; font-size: 0.9rem; color: #94a3b8; margin-bottom: 15px; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Cairo:wght@400;700&display=swap');
+        
+        body { font-family: 'Orbitron', sans-serif; background: #050b18; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; overflow: hidden; }
+        .container { background: #0f172a; padding: 30px; border-radius: 24px; width: 90%; max-width: 480px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); border: 1px solid #38bdf8; position: relative; }
+        
+        /* زر الترجمة */
+        #lang-btn { position: absolute; top: 15px; right: 15px; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: white; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; z-index: 100; }
+        
+        .arabic { font-family: 'Cairo', sans-serif; direction: rtl; }
+        
+        h1 { font-size: 1.8rem; color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); margin-top: 20px; }
+        .stage-label { color: #38bdf8; font-weight: bold; letter-spacing: 2px; margin-bottom: 15px; }
+        .question-text { font-size: 1.3rem; min-height: 90px; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; line-height: 1.4; }
+        
+        .option-btn { background: rgba(56, 189, 248, 0.05); color: white; border: 1px solid #38bdf8; padding: 15px; margin: 8px 0; width: 100%; border-radius: 12px; font-size: 1.1rem; cursor: pointer; transition: 0.2s; }
+        .option-btn:hover { background: #38bdf8; color: #050b18; }
+        
+        .stats { display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; border-bottom: 1px solid #1e293b; padding-bottom: 10px; }
+        .btn-nav { background: #38bdf8; color: #050010; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; margin: 10px; }
         .hidden { display: none; }
-        .btn-nav { background: #ef4444; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin: 5px; }
-        .total-badge { background: #334155; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; margin-top: 10px; display: inline-block; }
+        .glow { border-color: #10b981; background: rgba(16, 185, 129, 0.2); }
+        .shake { animation: shake 0.4s; border-color: #ef4444; background: rgba(239, 68, 68, 0.2); }
+        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-6px);} 75% {transform: translateX(6px);} }
     </style>
 </head>
 <body>
 
-<div class="container" id="main-box">
+<div class="container" id="game-container">
+    <button id="lang-btn" onclick="toggleLang()">🌐 EN / AR</button>
+
     <div id="start-screen">
-        <h1 style="color:#38bdf8">تحدي الفيزياء المتقدم</h1>
-        <p>اختبار شامل من 3 مراحل</p>
-        <button class="btn-nav" style="background:#38bdf8" onclick="startStage(1)">ابدأ التحدي</button>
+        <h1 id="title-text">PHYSICS MASTER</h1>
+        <p id="sub-text" style="color:#94a3b8">Advanced Scientific Challenge</p>
+        <div style="margin: 20px 0; color: #fbbf24;"><span id="best-text">Best Score</span>: <span id="high-val">0</span></div>
+        <button class="btn-nav" id="start-btn" onclick="startStage(1)">START MISSION</button>
     </div>
 
     <div id="quiz-screen" class="hidden">
-        <div id="stage-info" class="stage-label"></div>
+        <div id="stage-info" class="stage-label">STAGE 01</div>
         <div class="stats">
-            <span>نقاط المرحلة: <span id="score-val">0</span>/25</span>
-            <span>الوقت: <span id="timer-val">10</span>s</span>
+            <span><span id="score-label">SCORE</span>: <span id="score-val">0</span>/25</span>
+            <span><span id="time-label">TIME</span>: <span id="timer-val">10</span>s</span>
         </div>
         <div class="question-text" id="q-text"></div>
         <div id="options-box"></div>
-        <div id="feedback" style="margin-top:10px; font-weight:bold; height:20px;"></div>
     </div>
 
     <div id="result-screen" class="hidden">
         <h2 id="res-title"></h2>
         <p id="res-score"></p>
-        <div class="total-badge" id="total-points-display">إجمالي النقاط التراكمي: 0</div>
-        <p id="res-msg" style="color:#fbbf24; font-size:0.9rem; margin-top:15px;"></p>
+        <p id="res-msg" style="color:#fbbf24; margin-bottom: 20px;"></p>
         <div id="res-actions"></div>
     </div>
 </div>
 
 <script>
-// (مخزن الأسئلة كما هو في الكود السابق لضمان العمل)
+let currentLang = 'en';
 const pools = {
-    1: [ 
-        {q: "ما هي وحدة قياس الشدة الضوئية؟", o: ["القنديلة", "اللومن", "اللوكس"], a: "القنديلة"},
-        {q: "الكمية الفيزيائية التي تقاس بالهيرتز:", o: ["التردد", "الزمن الدوري", "الطول الموجي"], a: "التردد"},
-        {q: "وحدة قياس الجهد الكهربائي هي:", o: ["الفولت", "الأمبير", "الأوم"], a: "الفولت"},
-        {q: "أي مما يلي كمية متجهة؟", o: ["الإزاحة", "المسافة", "الكتلة"], a: "الإزاحة"},
-        {q: "وحدة قياس الضغط 'باسكال' تعادل:", o: ["نيوتن/متر²", "نيوتن.متر", "جول/ثانية"], a: "نيوتن/متر²"},
-        {q: "معدل تغير الإزاحة بالنسبة للزمن:", o: ["السرعة المتجهة", "التسارع", "الزخم"], a: "السرعة المتجهة"},
-        {q: "جهاز يستخدم لقياس الضغط الجوي:", o: ["البارومتر", "المانومتر", "الهيدرومتر"], a: "البارومتر"},
-        {q: "عدد الاهتزازات الكاملة في الثانية الواحدة:", o: ["التردد", "السعة", "الطور"], a: "التردد"},
-        {q: "الميل في منحنى (الموقع-الزمن) يمثل:", o: ["السرعة", "التسارع", "القوة"], a: "السرعة"},
-        {q: "تعتمد خاصية الصوت (الحدة) على:", o: ["التردد", "السعة", "السرعة"], a: "التردد"},
-        {q: "ما هو الرمز الكيميائي للنحاس؟", o: ["Cu", "Fe", "Ag"], a: "Cu"},
-        {q: "وحدة قياس الطاقة الحركية هي:", o: ["الجول", "الواط", "النيوتن"], a: "الجول"},
-        {q: "أصغر جزء في العنصر يحمل صفاته:", o: ["الذرة", "الجزيء", "البروتون"], a: "الذرة"},
-        {q: "حالة المادة التي لها شكل وحجم ثابتان:", o: ["الصلبة", "السائلة", "الغازية"], a: "الصلبة"},
-        {q: "ما هو أسرع شيء في الكون؟", o: ["الضوء", "الصوت", "الكهرباء"], a: "الضوء"},
-        {q: "وحدة قياس شدة التيار الكهربائي:", o: ["الأمبير", "الفولت", "الكولوم"], a: "الأمبير"},
-        {q: "النسبة بين الشغل المنجز والزمن:", o: ["القدرة", "الطاقة", "الزخم"], a: "القدرة"},
-        {q: "درجة غليان الماء بالسيليزيوس:", o: ["100", "0", "273"], a: "100"},
-        {q: "ما هي وحدة قياس العزم؟", o: ["نيوتن.متر", "نيوتن/متر", "جول/ثانية"], a: "نيوتن.متر"},
-        {q: "تسمى المادة التي تسمح بمرور الكهرباء:", o: ["موصلة", "عازلة", "شبه موصلة"], a: "موصلة"}
+    1: [
+        {en: {q: "What is the unit of luminous intensity?", o: ["Candela", "Lumen", "Lux"]}, ar: {q: "ما هي وحدة قياس الشدة الضوئية؟", o: ["القنديلة", "اللومن", "اللوكس"]}, a: 0},
+        {en: {q: "Frequency is measured in:", o: ["Hertz", "Period", "Watt"]}, ar: {q: "الكمية الفيزيائية التي تقاس بالهيرتز:", o: ["التردد", "الزمن الدوري", "الواط"]}, a: 0},
+        {en: {q: "Which is a vector quantity?", o: ["Displacement", "Distance", "Mass"]}, ar: {q: "أي مما يلي كمية متجهة؟", o: ["الإزاحة", "المسافة", "الكتلة"]}, a: 0},
+        {en: {q: "Slope of Position-Time graph is:", o: ["Velocity", "Acceleration", "Force"]}, ar: {q: "الميل في منحنى (الموقع-الزمن) يمثل:", o: ["السرعة", "التسارع", "القوة"]}, a: 0},
+        {en: {q: "Fastest thing in the universe?", o: ["Light", "Sound", "Electricity"]}, ar: {q: "ما هو أسرع شيء في الكون؟", o: ["الضوء", "الصوت", "الكهرباء"]}, a: 0}
     ],
-    2: [
-        {q: "إذا تضاعفت سرعة جسم، فإن طاقته الحركية:", o: ["تتضاعف 4 مرات", "تتضاعف مرتين", "تبقى ثابتة"], a: "تتضاعف 4 مرات"},
-        {q: "قانون الانكسار يعرف باسم قانون:", o: ["سنيل", "أوم", "كولوم"], a: "سنيل"},
-        {q: "العدسة التي تجمع الأشعة الضوئية هي:", o: ["المحدبة", "المقعرة", "المستوية"], a: "المحدبة"},
-        {q: "يستخدم الكشاف الكهربائي للكشف عن:", o: ["الشحنات", "المقاومة", "القدرة"], a: "الشحنات"},
-        {q: "تتناسب المقاومة طردياً مع:", o: ["طول السلك", "مساحة المقطع", "الجهد"], a: "طول السلك"},
-        {q: "قيمة تسارع الجاذبية على القمر تساوي:", o: ["1/6 الأرض", "1/2 الأرض", "ضعف الأرض"], a: "1/6 الأرض"},
-        {q: "الصوت موجة من النوع:", o: ["طولية", "مستعرضة", "كهرومغناطيسية"], a: "طولية"},
-        {q: "تحويل 27 درجة سيليزيوس إلى كلفن:", o: ["300", "246", "310"], a: "300"},
-        {q: "الطاقة لا تفنى ولا تستحدث من العدم:", o: ["حفظ الطاقة", "القانون الثاني", "قانون لنز"], a: "حفظ الطاقة"},
-        {q: "الميل في منحنى (السرعة-الزمن) يمثل:", o: ["التسارع", "الإزاحة", "القوة"], a: "التسارع"},
-        {q: "المرآة التي تكون دائماً صوراً مصغرة:", o: ["المحدبة", "المقعرة", "المستوية"], a: "المحدبة"},
-        {q: "وحدة قياس الفيض المغناطيسي:", o: ["الويبر", "التسلا", "الفاراد"], a: "الويبر"},
-        {q: "قانون أوم يربط بين الجهد و:", o: ["التيار والمقاومة", "القدرة والزمن", "الشغل والمسافة"], a: "التيار والمقاومة"},
-        {q: "ينص قانون لنز على تحديد اتجاه:", o: ["التيار الحثي", "القوة", "المجال الجاذبي"], a: "التيار الحثي"},
-        {q: "تحدث ظاهرة السراب بسبب:", o: ["الانكسار", "الانعكاس", "التداخل"], a: "الانكسار"},
-        {q: "وحدة قياس السعة الكهربائية:", o: ["الفاراد", "الأوم", "الهنري"], a: "الفاراد"},
-        {q: "الزخم هو حاصل ضرب الكتلة في:", o: ["السرعة", "التسارع", "الزمن"], a: "السرعة"},
-        {q: "يقل وزن الشخص داخل مصعد عندما:", o: ["يتسارع للأسفل", "يتسارع للأعلى", "يتحرك بسرعة ثابتة"], a: "يتسارع للأسفل"},
-        {q: "مقاومة 10 و 20 أوم على التوالي مجموعهما:", o: ["30", "6.6", "200"], a: "30"},
-        {q: "ظاهرة انحناء الضوء حول الحواف:", o: ["الحيود", "الاستقطاب", "الانعكاس"], a: "الحيود"}
-    ],
-    3: [
-        {q: "ما هو مبدأ عدم التحديد (الشك)؟", o: ["هايزنبرج", "شرودنجر", "بور"], a: "هايزنبرج"},
-        {q: "طاقة الفوتون تتناسب طردياً مع:", o: ["تردده", "طوله الموجي", "سرعته"], a: "تردده"},
-        {q: "أشعة المهبط عبارة عن سيل من:", o: ["الإلكترونات", "البروتونات", "الفوتونات"], a: "الإلكترونات"},
-        {q: "تأثير كومبتون يثبت أن للفوتون:", o: ["زخم", "كتلة سكون", "شحنة"], a: "زخم"},
-        {q: "نصف قطر مدار بوهر الأول للهيدروجين:", o: ["0.0529 nm", "0.529 nm", "5.29 nm"], a: "0.0529 nm"},
-        {q: "الجسيم الذي كتلته صفر وشحنته صفر:", o: ["الفوتون", "النيوترون", "الإلكترون"], a: "الفوتون"},
-        {q: "التحول النووي الذي يطلق إلكتروناً:", o: ["اضمحلال بيتا", "اضمحلال ألفا", "أشعة جاما"], a: "اضمحلال بيتا"},
-        {q: "مبدأ عمل المفاعل النووي هو:", o: ["الانشطار المسيطر عليه", "الاندماج النووي", "التحلل الكيميائي"], a: "الانشطار المسيطر عليه"},
-        {q: "تستخدم خلية كهرومغناطيسية لتحويل:", o: ["الضوء إلى كهرباء", "الحرارة إلى حركة", "الكهرباء إلى مغناطيس"], a: "الضوء إلى كهرباء"},
-        {q: "النموذج الذي اقترح أن الإلكترونات في سحابة:", o: ["الكمي", "رذرفورد", "طومسون"], a: "الكمي"},
-        {q: "تزداد الطاقة الحركية للإلكترونات بزيادة:", o: ["تردد الضوء", "شدة الضوء", "زمن التعرض"], a: "تردد الضوء"},
-        {q: "ما هي الجسيمات المكونة للبروتون؟", o: ["كواركات", "ليبتونات", "بوزونات"], a: "كواركات"},
-        {q: "قوة الربط النووي مسؤولة عن:", o: ["تماسك النواة", "دوران الإلكترون", "التجاذب الكتلي"], a: "تماسك النواة"},
-        {q: "العلاقة E=mc² تعني إمكانية تحويل:", o: ["الكتلة إلى طاقة", "السرعة إلى كتلة", "الزمن إلى مكان"], a: "الكتلة إلى طاقة"},
-        {q: "ما هو جسيم 'بوزون هيغز' المرتبط بـ:", o: ["الكتلة", "الشحنة", "الجاذبية"], a: "الكتلة"},
-        {q: "الضوء المترابط ووحيد اللون هو:", o: ["الليزر", "المصباح", "الشمس"], a: "الليزر"},
-        {q: "تتحقق حالة 'فوق التوصيل' عند درجات حرارة:", o: ["منخفضة جداً", "مرتفعة جداً", "غرفة"], a: "منخفضة جداً"},
-        {q: "في الانزياح نحو الأحمر، المجرات:", o: ["تتباعد عنا", "تقترب منا", "ثابتة"], a: "تتباعد عنا"},
-        {q: "مبدأ عمل الترانزستور يعتمد على:", o: ["أشباه الموصلات", "العوازل", "المواد النقية"], a: "أشباه الموصلات"},
-        {q: "ما هي القوة الأساسية الأضعف في الطبيعة؟", o: ["الجاذبية", "الكهرومغناطيسية", "النووية القوية"], a: "الجاذبية"}
-    ]
+    // يمكنك إضافة المرحلة 2 و 3 بنفس النمط
 };
 
 let curStage = 1, stageScore = 0, totalScore = 0, qIdx = 0, stageQs = [], timer;
 
-function playSound(isCorrect) {
-    try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.frequency.setValueAtTime(isCorrect ? 800 : 200, ctx.currentTime);
-        osc.start(); osc.stop(ctx.currentTime + 0.1);
-    } catch(e){}
+function toggleLang() {
+    currentLang = currentLang === 'en' ? 'ar' : 'en';
+    const gc = document.getElementById('game-container');
+    if(currentLang === 'ar') gc.classList.add('arabic'); else gc.classList.remove('arabic');
+    updateStaticTexts();
+    if(!document.getElementById('quiz-screen').classList.contains('hidden')) renderQuestion();
+}
+
+function updateStaticTexts() {
+    const t = {
+        en: {title: "PHYSICS MASTER", sub: "Advanced Scientific Challenge", best: "Best Score", start: "START MISSION", score: "SCORE", time: "TIME"},
+        ar: {title: "تحدي الفيزياء", sub: "اختبار علمي متقدم", best: "أفضل نتيجة", start: "ابدأ المهمة", score: "النقاط", time: "الوقت"}
+    }[currentLang];
+    document.getElementById('title-text').innerText = t.title;
+    document.getElementById('sub-text').innerText = t.sub;
+    document.getElementById('best-text').innerText = t.best;
+    document.getElementById('start-btn').innerText = t.start;
+    document.getElementById('score-label').innerText = t.score;
+    document.getElementById('time-label').innerText = t.time;
 }
 
 function startStage(s) {
     curStage = s; stageScore = 0; qIdx = 0;
-    stageQs = [...pools[s]].sort(() => 0.5 - Math.random()).slice(0, 5);
-    show('quiz-screen'); loadQ();
+    stageQs = [...pools[1]].sort(() => 0.5 - Math.random());
+    show('quiz-screen'); renderQuestion();
 }
 
-function loadQ() {
-    if(qIdx >= 5) return finish();
+function renderQuestion() {
+    if(qIdx >= stageQs.length) return finish();
     clearInterval(timer);
     const data = stageQs[qIdx];
-    document.getElementById('stage-info').innerText = `المرحلة: ${curStage}`;
+    const langData = data[currentLang];
+    const correctAnswer = data[currentLang].o[data.a]; // الإجابة الصحيحة بناءً على اللغة
+    
+    document.getElementById('stage-info').innerText = currentLang === 'en' ? `STAGE 0${curStage}` : `المرحلة 0${curStage}`;
     document.getElementById('score-val').innerText = stageScore;
-    document.getElementById('q-text').innerText = data.q;
+    document.getElementById('q-text').innerText = langData.q;
+    
     const box = document.getElementById('options-box'); box.innerHTML = "";
-    document.getElementById('feedback').innerText = "";
     
-    [...data.o].sort(() => 0.5 - Math.random()).forEach(o => {
+    // شفل الخيارات (عشوائية حقيقية)
+    let shuffledOptions = [...langData.o].sort(() => 0.5 - Math.random());
+    
+    shuffledOptions.forEach(opt => {
         const b = document.createElement('button'); b.className = 'option-btn';
-        b.innerText = o; b.onclick = () => check(o, b); box.appendChild(b);
+        b.innerText = opt;
+        b.onclick = () => {
+            clearInterval(timer);
+            const all = document.querySelectorAll('.option-btn');
+            all.forEach(btn => btn.disabled = true);
+            if(opt === correctAnswer) {
+                stageScore += 5; totalScore += 5; b.classList.add('glow');
+            } else {
+                b.classList.add('shake');
+            }
+            qIdx++; setTimeout(renderQuestion, 1000);
+        };
+        box.appendChild(b);
     });
-    
+
     let s = 10; document.getElementById('timer-val').innerText = s;
     timer = setInterval(() => {
         s--; document.getElementById('timer-val').innerText = s;
-        if(s <= 0) { clearInterval(timer); check(null, null); }
+        if(s <= 0) { clearInterval(timer); renderQuestion(qIdx++); }
     }, 1000);
-}
-
-function check(o, b) {
-    clearInterval(timer);
-    const ans = stageQs[qIdx].a;
-    const btns = document.querySelectorAll('.option-btn');
-    btns.forEach(x => x.disabled = true);
-
-    if(o === ans) {
-        stageScore += 5; totalScore += 5;
-        if(b) b.classList.add('glow'); playSound(true);
-    } else {
-        if(b) b.classList.add('shake'); playSound(false);
-    }
-    qIdx++; setTimeout(loadQ, 1200);
 }
 
 function finish() {
     show('result-screen');
     const win = stageScore >= 15;
-    document.getElementById('res-title').innerText = win ? "عمل رائع! ✨" : "محاولة جيدة 💡";
-    document.getElementById('res-score').innerText = `نقاط هذه المرحلة: ${stageScore} من 25`;
-    document.getElementById('total-points-display').innerText = `إجمالي نقاطك في التحدي حتى الآن: ${totalScore}`;
+    const res = {
+        en: {win: "MISSION SUCCESS ✨", fail: "MISSION FAILED 💡", next: "NEXT STAGE", retry: "RETRY"},
+        ar: {win: "تمت المهمة بنجاح ✨", fail: "للأسف لم تنجح 💡", next: "المرحلة التالية", retry: "إعادة المحاولة"}
+    }[currentLang];
     
-    const actions = document.getElementById('res-actions'); actions.innerHTML = "";
-    const msg = document.getElementById('res-msg'); msg.innerText = "";
-
-    if(win) {
-        if(curStage < 3) {
-            actions.innerHTML = `<button class="btn-nav" onclick="startStage(${curStage+1})">انتقال للمرحلة ${curStage+1}</button>
-                                 <button class="btn-nav" style="background:#64748b" onclick="location.reload()">الانسحاب والبدء من جديد</button>`;
-        } else {
-            actions.innerHTML = `<h3>🏆 عبقري فيزياء! ختمت التحدي بنجاح 🏅</h3>
-                                 <p>مجموعك النهائي: ${totalScore} من أصل 75</p>
-                                 <button class="btn-nav" onclick="location.reload()">البداية</button>`;
-        }
-    } else {
-        msg.innerText = "تحتاج لجمع 15 نقطة في هذه المرحلة لفتح التي تليها.";
-        actions.innerHTML = `<button class="btn-nav" onclick="startStage(${curStage})">إعادة هذه المرحلة</button>
-                             <button class="btn-nav" style="background:#64748b" onclick="location.reload()">إنهاء اللعب</button>`;
-    }
+    document.getElementById('res-title').innerText = win ? res.win : res.fail;
+    document.getElementById('res-score').innerText = `${stageScore}/25`;
+    document.getElementById('res-actions').innerHTML = win ? 
+        `<button class="btn-nav" onclick="location.reload()">${res.next}</button>` : 
+        `<button class="btn-nav" onclick="startStage(${curStage})">${res.retry}</button>`;
 }
 
 function show(id) {
     ['start-screen', 'quiz-screen', 'result-screen'].forEach(s => document.getElementById(s).classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
 }
+
+document.getElementById('high-val').innerText = localStorage.getItem('phys_high') || 0;
 </script>
 </body>
 </html>
