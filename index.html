@@ -163,6 +163,23 @@ function show(id) {
 }
 
 document.getElementById('high-val').innerText = localStorage.getItem('phys_high') || 0;
+    // --- كود الموسيقى المطور ---
+const bgMusic = new Audio('physics-music.mp3'); 
+bgMusic.loop = true; 
+bgMusic.volume = 0.3; // صوت هادئ لتركيز اللاعب
+let isMusicStarted = false;
+
+// تفعيل الموسيقى مع أول لمسة للشاشة
+document.addEventListener('click', () => {
+    if (!isMusicStarted) {
+        bgMusic.play().then(() => {
+            console.log("Music is playing now!");
+        }).catch(err => {
+            console.log("Playback failed:", err);
+        });
+        isMusicStarted = true;
+    }
+}, { once: true });
 </script>
 </body>
 </html>
